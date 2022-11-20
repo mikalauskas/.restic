@@ -1,2 +1,3 @@
 .env
+restic
 restic-backup.service
