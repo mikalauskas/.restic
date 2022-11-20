@@ -25,7 +25,7 @@ esac
 
 rm ${SCRIPT_DIR}/restic
 curl -L https://github.com/restic/restic/releases/download/v$VERSION/restic_"$VERSION"_linux_$OS_type.bz2 --output ${SCRIPT_DIR}/restic.bz2
-bzip2 -f -d ${SCRIPT_DIR}/restic.bz2 ${SCRIPT_DIR}/
+bzip2 -f -d ${SCRIPT_DIR}/restic.bz2
 
 sudo chmod ug+x ${RESTIC_ROOT}/restic
 sudo chmod ug+x ${RESTIC_ROOT}/restic-backup.sh
@@ -43,7 +43,7 @@ IOSchedulingClass=2
 IOSchedulingPriority=7
 EOF
 
-sudo systemctl disable --now restic-backup*
+sudo systemctl disable --now restic-backup*.timer
 
 sudo rm /etc/systemd/system/restic-backup*
 
