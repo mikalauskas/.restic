@@ -6,8 +6,28 @@ SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 source ${SCRIPT_DIR}/.env
 
-sudo chmod +x ${RESTIC_ROOT}/restic
-sudo chmod +x ${RESTIC_ROOT}/restic-backup.sh
+OS_type="$(uname -m)"
+case "$OS_type" in
+  x86_64|amd64)
+    OS_type='amd64'
+    ;;
+  aarch64|arm64)
+    OS_type='arm64'
+    ;;
+  arm*)
+    OS_type='arm'
+    ;;
+  *)
+    echo 'OS type not supported'
+    exit 2
+    ;;
+esac
+
+curl -L https://github.com/restic/restic/releases/download/v$VERSION/restic_"$VERSION"_linux_$OS_type.bz2 --output restic.bz2
+bzip2 -d restic.bz2
+
+sudo chmod ug+x ${RESTIC_ROOT}/restic
+sudo chmod ug+x ${RESTIC_ROOT}/restic-backup.sh
 
 cat <<EOF > ${RESTIC_ROOT}/restic-backup.service
 [Unit]
