@@ -1,0 +1,10 @@
+[Unit]
+Description=Restic backup daily
+
+[Timer]
+OnCalendar=daily
+Persistent=true
+RandomizedDelaySec=8h
+
+[Install]
+WantedBy=timers.target

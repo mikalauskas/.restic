@@ -1,0 +1,13 @@
+/dev/*
+/proc/*
+/sys/*
+/tmp/*
+/run/*
+/mnt/*
+/media/*
+/lost+found
+
+/home/**/.cache/*
+/home/**/.npm/_cacache
+/root/**/.cache/*
+/root/**/.npm/_cacache
