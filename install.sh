@@ -23,8 +23,9 @@ case "$OS_type" in
     ;;
 esac
 
-curl -L https://github.com/restic/restic/releases/download/v$VERSION/restic_"$VERSION"_linux_$OS_type.bz2 --output restic.bz2
-bzip2 -d restic.bz2
+rm ${SCRIPT_DIR}/restic
+curl -L https://github.com/restic/restic/releases/download/v$VERSION/restic_"$VERSION"_linux_$OS_type.bz2 --output ${SCRIPT_DIR}/restic.bz2
+bzip2 -f -d ${SCRIPT_DIR}/restic.bz2 ${SCRIPT_DIR}/
 
 sudo chmod ug+x ${RESTIC_ROOT}/restic
 sudo chmod ug+x ${RESTIC_ROOT}/restic-backup.sh
