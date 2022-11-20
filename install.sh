@@ -1,6 +1,9 @@
 #!/bin/bash
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
+[ -f "${SCRIPT_DIR}/.env" ] || exit 1
+
 source ${SCRIPT_DIR}/.env
 
 sudo chmod +x ${RESTIC_ROOT}/restic
