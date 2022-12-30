@@ -41,7 +41,7 @@ $trigger = @(
 
 $principal = New-ScheduledTaskPrincipal -UserID "$env:COMPUTERNAME\$env:RESTIC_USERNAME" -RunLevel Highest -LogonType S4U
 
-$settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -RestartCount 10 -RestartInterval (New-TimeSpan -Minutes 60) -StartWhenAvailable -ExecutionTimeLimit (New-TimeSpan -Hours 24) -MultipleInstances Parallel
+$settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -WakeToRun -StartWhenAvailable -MultipleInstances Parallel
 Register-ScheduledTask -Force -Action $action -Trigger $trigger -Settings $settings -Principal $principal -TaskName "restic" -Description "Starts restic services on user logon" 
 
 #"Start restic scheduled task"
