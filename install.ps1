@@ -39,7 +39,7 @@ $trigger = @(
     #$(New-ScheduledTaskTrigger -Once -At (Get-Date) -RepetitionInterval (New-TimeSpan -Minutes 60) -RepetitionDuration (New-TimeSpan -Days (365 * 20)))
 )
 
-$principal = New-ScheduledTaskPrincipal -UserID "$env:COMPUTERNAME\$env:RESTIC_USERNAME" -RunLevel Highest -LogonType S4U -Principal $principal
+$principal = New-ScheduledTaskPrincipal -UserID "$env:COMPUTERNAME\$env:RESTIC_USERNAME" -RunLevel Highest -LogonType S4U
 
 $settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -RestartCount 10 -RestartInterval (New-TimeSpan -Minutes 60) -StartWhenAvailable -ExecutionTimeLimit (New-TimeSpan -Hours 24) -MultipleInstances Parallel
 Register-ScheduledTask -Force -Action $action -Trigger $trigger -Settings $settings -Principal $principal -TaskName "restic" -Description "Starts restic services on user logon" 
