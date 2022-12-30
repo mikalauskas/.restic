@@ -71,9 +71,9 @@ Start-BackroundJob -LockFile "restic" -ScriptBlock {
         
         do {
             Write-Output "$(Get-Date) Unlock job: Unlocking..."
-            .$RESTIC_EXEC unlock --cleanup-cache
+            . $env:RESTIC_EXEC unlock --cleanup-cache
             start-sleep 5
-        } while (.$RESTIC_EXEC list locks --no-lock)
+        } while (. $env:RESTIC_EXEC list locks --no-lock)
         Write-Output "**********"
         Write-Output "Unlock job: End"
         Write-Output "**********"
@@ -84,7 +84,7 @@ Start-BackroundJob -LockFile "restic" -ScriptBlock {
         Write-Output "Check Errors job: Begin"
         Write-Output "**********"
         
-        .$RESTIC_EXEC check --read-data-subset '2%' --cleanup-cache
+        . $env:RESTIC_EXEC check --read-data-subset '2%' --cleanup-cache
         
         Write-Output "**********"
         Write-Output "Check Errors job: End"
@@ -93,7 +93,7 @@ Start-BackroundJob -LockFile "restic" -ScriptBlock {
         #     Write-Output "**********"
         #     Write-Output "Rebuild-index job: Begin"
         #     Write-Output "**********"
-        #     .$RESTIC_EXEC rebuild-index --cleanup-cache
+        #     . $env:RESTIC_EXEC rebuild-index --cleanup-cache
         #     Write-Output "**********"
         #     Write-Output "Rebuild-index job: End"
         #     Write-Output "**********"
@@ -155,7 +155,7 @@ Start-BackroundJob -LockFile "restic" -ScriptBlock {
         Write-Output "**********"
         Write-Output "Backup job: Begin"
         Write-Output "**********"
-        .$RESTIC_EXEC backup -v --use-fs-snapshot --host $env:COMPUTERNAME --exclude-file $RESTIC_EXCLUDE_FILE --files-from $RESTIC_INCLUDE_FILE --cleanup-cache
+        . $env:RESTIC_EXEC backup -v --use-fs-snapshot --host $env:COMPUTERNAME --exclude-file $RESTIC_EXCLUDE_FILE --files-from $RESTIC_INCLUDE_FILE --cleanup-cache
         Write-Output "**********"
         Write-Output "Backup job: End"
         Write-Output "**********"
@@ -165,7 +165,7 @@ Start-BackroundJob -LockFile "restic" -ScriptBlock {
         Write-Output "**********"
         Write-Output "Forget job: Begin"
         Write-Output "**********"
-        .$RESTIC_EXEC forget -v --prune -d $env:RESTIC_PRUNE_DAYS -w $env:RESTIC_PRUNE_WEEKS -m $env:RESTIC_PRUNE_MONTHS -y $env:RESTIC_PRUNE_YEARS --host $env:COMPUTERNAME --group-by host --cleanup-cache
+        . $env:RESTIC_EXEC forget -v --prune -d $env:RESTIC_PRUNE_DAYS -w $env:RESTIC_PRUNE_WEEKS -m $env:RESTIC_PRUNE_MONTHS -y $env:RESTIC_PRUNE_YEARS --host $env:COMPUTERNAME --group-by host --cleanup-cache
         Write-Output "**********"
         Write-Output "Forget job: End"
         Write-Output "**********"
