@@ -15,7 +15,7 @@ if (
 "Downloading restic"
 Remove-Item -Force "$env:TEMP\restic_$($env:RESTIC_VERSION)_windows_amd64.zip" -ErrorAction SilentlyContinue
 
-Invoke-WebRequest -UseBasicParsing -Uri "https://github.com/restic/restic/releases/download/v$($env:RESTIC_VERSION)/restic_$($env:RESTIC_VERSION)_windows_amd64.zip" -OutFile "$env:TEMP\restic_$($env:RESTIC_VERSION)_windows_amd64.zip"
+Invoke-WebRequest -UseBasicParsing -Uri "https://github.com/restic/restic/releases/download/v$($env:RESTIC_VERSION)/restic_$($env:RESTIC_VERSION)_windows_amd64.zip" -OutFile "$env:TEMP\restic_$($env:RESTIC_VERSION)_windows_amd64.zip" -ErrorAction Stop
 
 "Uncompressing restic"
 if (!(Test-Path -Path "$env:RESTIC_ROOT")) {
