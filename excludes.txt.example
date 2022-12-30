@@ -1,3 +1,8 @@
+# windows
+C:\pagefile.sys
+C:\swapfile.sys
+
+# linux
 /dev/*
 /proc/*
 /sys/*

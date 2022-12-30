@@ -1,3 +1,9 @@
 .env
+.env-ps
+TODO
 restic
+restic.exe
 restic-backup.service
+.restic.code-workspace
+includes.txt
+excludes.txt
