@@ -53,6 +53,8 @@ function Start-BackroundJob () {
     }
 }
 
+Start-Transcript -Path $PSScriptRoot\restic.log -Append -Force -IncludeInvocationHeader
+
 if (!Test-Path -Path "$PSScriptRoot\.env-ps") {
     Write-Error ".env-ps file is missing."
     exit 1
