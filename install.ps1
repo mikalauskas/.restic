@@ -35,7 +35,7 @@ Unregister-ScheduledTask -Confirm:$false -TaskName "restic" -ErrorAction Silentl
 $action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-NoProfile -windowstyle hidden -ExecutionPolicy Bypass -File `"$env:RESTIC_ROOT\restic-backup.ps1`"" -WorkingDirectory $env:RESTIC_ROOT
 
 $trigger = @( 
-    $(New-ScheduledTaskTrigger -Daily -At 12pm -RandomDelay (New-TimeSpan -Minutes 2))
+    $(New-ScheduledTaskTrigger -Daily -At 8am -RandomDelay (New-TimeSpan -Minutes 2))
     #$(New-ScheduledTaskTrigger -Once -At (Get-Date) -RepetitionInterval (New-TimeSpan -Minutes 60) -RepetitionDuration (New-TimeSpan -Days (365 * 20)))
 )
 
