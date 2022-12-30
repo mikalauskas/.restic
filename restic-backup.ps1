@@ -105,14 +105,14 @@ Start-BackroundJob -LockFile "restic" -ScriptBlock {
         Write-Output "**********"
         Write-Output "Registry backup job: Begin"
         Write-Output "**********"
-        Remove-Item -Force -Recurse -Path "$($RESTIC_ROOT)\RegBack\*"
+        Remove-Item -Force -Recurse -Path "$($env:RESTIC_ROOT)\RegBack\*"
         $Code = {
             param ($path)
-            if (-not (Test-Path -Path "$($RESTIC_ROOT)\RegBack\$path")) { New-Item -Force -ItemType Directory -Path "$($RESTIC_ROOT)\RegBack\$path" }
+            if (-not (Test-Path -Path "$($env:RESTIC_ROOT)\RegBack\$path")) { New-Item -Force -ItemType Directory -Path "$($env:RESTIC_ROOT)\RegBack\$path" }
             Get-ChildItem -Recurse -Depth 1 -Path Registry::$path -ErrorAction Continue | ForEach-Object {
                 $fullRegPath = $_.Name
                 $registryFileName = $_ -replace '_','' -replace '\\','_' -replace ' ','_'
-                reg export $fullRegPath "$($RESTIC_ROOT)\RegBack\${path}\${registryFileName}.reg" /y
+                reg export $fullRegPath "$($env:RESTIC_ROOT)\RegBack\${path}\${registryFileName}.reg" /y
             }
         }
         $jobs = @()
@@ -122,8 +122,8 @@ Start-BackroundJob -LockFile "restic" -ScriptBlock {
         # Receive-Job -Job $jobs
 
         # registry -path "HKEY_CLASSES_ROOT" -depth 0
-        Compress-Archive -Path "$($RESTIC_ROOT)\RegBack\*" -DestinationPath "$($RESTIC_ROOT)\RegBack\RegBack.zip"
-        Remove-Item -Force -Recurse -Exclude "RegBack.zip" -Path "$($RESTIC_ROOT)\RegBack\*"
+        Compress-Archive -Path "$($env:RESTIC_ROOT)\RegBack\*" -DestinationPath "$($env:RESTIC_ROOT)\RegBack\RegBack.zip"
+        Remove-Item -Force -Recurse -Exclude "RegBack.zip" -Path "$($env:RESTIC_ROOT)\RegBack\*"
 
         $dateTimespan = New-TimeSpan -Start $dateBegin -End (Get-Date)
         $dateEndMinutes = $dateTimespan.Minutes
@@ -139,12 +139,12 @@ Start-BackroundJob -LockFile "restic" -ScriptBlock {
         Write-Output "Event logs backup job: Begin"
         Write-Output "**********"
 
-        if (-not (Test-Path -Path "$($RESTIC_ROOT)\EventLogs")) { New-Item -Force -ItemType Directory -Path "$($RESTIC_ROOT)\EventLogs" }
-        Get-EventLog -LogName "Application" -EntryType "Error","Warning" -After (Get-Date).AddDays(-2) | Sort-Object TimeGenerated | Select EntryType, TimeGenerated, Source, EventID, Message | Export-CSV "$($RESTIC_ROOT)\EventLogs\Application${ExportFileSuffix}" -NoTypeInfo
-        Get-EventLog -LogName "System" -EntryType "Error","Warning" -After (Get-Date).AddDays(-2) | Sort-Object TimeGenerated | Select EntryType, TimeGenerated, Source, EventID, Message | Export-CSV "$($RESTIC_ROOT)\EventLogs\System${ExportFileSuffix}" -NoTypeInfo
+        if (-not (Test-Path -Path "$($env:RESTIC_ROOT)\EventLogs")) { New-Item -Force -ItemType Directory -Path "$($env:RESTIC_ROOT)\EventLogs" }
+        Get-EventLog -LogName "Application" -EntryType "Error","Warning" -After (Get-Date).AddDays(-2) | Sort-Object TimeGenerated | Select EntryType, TimeGenerated, Source, EventID, Message | Export-CSV "$($env:RESTIC_ROOT)\EventLogs\Application${ExportFileSuffix}" -NoTypeInfo
+        Get-EventLog -LogName "System" -EntryType "Error","Warning" -After (Get-Date).AddDays(-2) | Sort-Object TimeGenerated | Select EntryType, TimeGenerated, Source, EventID, Message | Export-CSV "$($env:RESTIC_ROOT)\EventLogs\System${ExportFileSuffix}" -NoTypeInfo
         
-        Compress-Archive -Path "$($RESTIC_ROOT)\EventLogs\*" -DestinationPath "$($RESTIC_ROOT)\EventLogs\EventLogs.zip"
-        Remove-Item -Force -Recurse -Exclude "EventLogs.zip" -Path "$($RESTIC_ROOT)\EventLogs\*"
+        Compress-Archive -Path "$($env:RESTIC_ROOT)\EventLogs\*" -DestinationPath "$($env:RESTIC_ROOT)\EventLogs\EventLogs.zip"
+        Remove-Item -Force -Recurse -Exclude "EventLogs.zip" -Path "$($env:RESTIC_ROOT)\EventLogs\*"
         
         Write-Output "**********"
         Write-Output "Event logs backup job: End"
@@ -155,7 +155,7 @@ Start-BackroundJob -LockFile "restic" -ScriptBlock {
         Write-Output "**********"
         Write-Output "Backup job: Begin"
         Write-Output "**********"
-        . $env:RESTIC_EXEC backup -v --use-fs-snapshot --host $env:COMPUTERNAME --exclude-file $RESTIC_EXCLUDE_FILE --files-from $RESTIC_INCLUDE_FILE --cleanup-cache
+        . $env:RESTIC_EXEC backup -v --use-fs-snapshot --host $env:COMPUTERNAME --exclude-file $env:RESTIC_EXCLUDE_FILE --files-from $env:RESTIC_INCLUDE_FILE --cleanup-cache
         Write-Output "**********"
         Write-Output "Backup job: End"
         Write-Output "**********"
