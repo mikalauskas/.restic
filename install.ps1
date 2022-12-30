@@ -2,9 +2,9 @@
 Set-ExecutionPolicy Bypass -Scope CurrentUser -Force
 
 if (
-    (!Test-Path -Path "$PSScriptRoot\.env-ps") -or
-    (!Test-Path -Path "$PSScriptRoot\includes.txt") -or
-    (!Test-Path -Path "$PSScriptRoot\excludes.txt")
+    !(Test-Path -Path "$PSScriptRoot\.env-ps") -or
+    !(Test-Path -Path "$PSScriptRoot\includes.txt") -or
+    !(Test-Path -Path "$PSScriptRoot\excludes.txt")
     ) {
     Write-Error ".env-ps file is missing."
     exit 1
