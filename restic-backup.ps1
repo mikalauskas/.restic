@@ -55,25 +55,25 @@ function Start-BackroundJob () {
 
 Start-Transcript -Path $PSScriptRoot\restic.log -Append -Force -IncludeInvocationHeader
 
-if (!Test-Path -Path "$PSScriptRoot\.env-ps") {
-    Write-Error ".env-ps file is missing."
+if (!Test-Path -Path "$PSScriptRoot\.env.ps1") {
+    Write-Error ".env.ps1 file is missing."
     exit 1
 }
 
 New-LockFile -LockFile "restic" | Out-Null
 
 # read .env file
-. .env-ps
+. .env.ps1
 
 Start-BackroundJob -LockFile "restic" -ScriptBlock {
 
-    if (!Test-Path -Path "$PSScriptRoot\.env-ps") {
-        Write-Error ".env-ps file is missing."
+    if (!Test-Path -Path "$PSScriptRoot\.env.ps1") {
+        Write-Error ".env.ps1 file is missing."
         exit 1
     }
 
     # read .env file
-    . .env-ps
+    . .env.ps1
 
     function Invoke-ResticUnlock () {
         Write-Output "**********"

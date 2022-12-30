@@ -2,15 +2,15 @@
 Set-ExecutionPolicy Bypass -Scope CurrentUser -Force
 
 if (
-    !(Test-Path -Path "$PSScriptRoot\.env-ps") -or
+    !(Test-Path -Path "$PSScriptRoot\.env.ps1") -or
     !(Test-Path -Path "$PSScriptRoot\includes.txt") -or
     !(Test-Path -Path "$PSScriptRoot\excludes.txt")
     ) {
-    Write-Error ".env-ps file is missing."
+    Write-Error ".env.ps1 file is missing."
     exit 1
 }
 
-. .env-ps
+. .env.ps1
 
 "Downloading restic"
 Remove-Item -Force "$env:TEMP\restic_$($env:RESTIC_VERSION)_windows_amd64.zip" -ErrorAction SilentlyContinue
