@@ -50,6 +50,8 @@ sudo rm /etc/systemd/system/restic-backup*
 sudo ln -s $HOME/.restic/restic-backup.service /etc/systemd/system/restic-backup.service
 sudo ln -s $HOME/.restic/restic-backup.timer /etc/systemd/system/restic-backup.timer
 
+sudo chown ${USERNAME}:${USERNAME} ./*
+
 sudo systemctl daemon-reload
 
 sudo systemctl enable --now restic-backup.timer
