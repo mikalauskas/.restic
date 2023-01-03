@@ -58,11 +58,11 @@ Start-Transcript -Path restic.log -Append -Force -IncludeInvocationHeader
 New-LockFile -LockFile "restic" | Out-Null
 
 # read .env file
-. .env.ps1
+. ".\.env.ps1"
 
 Start-BackroundJob -LockFile "restic" -ScriptBlock {
     # read .env file
-    . .env.ps1
+    . ".\.env.ps1"
 
     function Invoke-ResticUnlock () {
         Write-Output "**********"

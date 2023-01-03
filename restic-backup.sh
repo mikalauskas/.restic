@@ -50,7 +50,7 @@ function doBackup () {
   echo "$($date): Backup job: Begin"
   echo "------------------------"
   ${RESTIC_ROOT}/restic cache --cleanup --max-age 0
-  ${RESTIC_ROOT}/restic backup -vv --compression max --host=${HOSTNAME} --exclude-file=${RESTIC_EXCLUDE_FILE} --files-from=${RESTIC_INCLUDE_FILE} --cleanup-cache
+  ${RESTIC_ROOT}/restic backup -v --compression max --host=${HOSTNAME} --exclude-file=${RESTIC_EXCLUDE_FILE} --files-from=${RESTIC_INCLUDE_FILE} --cleanup-cache
   backupExitCode=$?
   if [ ! $backupExitCode -eq 0 ]; then
     errorCheck
@@ -59,17 +59,10 @@ function doBackup () {
   echo "------------------------"
   echo "$($date): Forget job: Begin"
   echo "------------------------"
-  ${RESTIC_ROOT}/restic forget -vv --compression max --prune -d ${PRUNE_DAYS} -w ${PRUNE_WEEKS} -m ${PRUNE_MONTHS} --host=${HOSTNAME} --group-by host --cleanup-cache
+  ${RESTIC_ROOT}/restic forget -v --compression max --prune -d ${PRUNE_DAYS} -w ${PRUNE_WEEKS} -m ${PRUNE_MONTHS} --host=${HOSTNAME} --group-by host --cleanup-cache
   echo "$($date): Forget job: End"
   echo "------------------------"
   return 0
-}
-
-function diff () {
-  echo "$($date): Diff job: Begin"
-  ${RESTIC_ROOT}/restic diff $(restic snapshots --compact | tail -n4 | head -n2 | cut -d' ' -f1)
-  echo "$($date): Diff job: End"
-  echo "------------------------"
 }
 
 dateStart=$(date '+%s')

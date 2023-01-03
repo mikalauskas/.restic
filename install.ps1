@@ -14,7 +14,7 @@ if (
     exit 1
 }
 
-. .env.ps1
+. ".\.env.ps1"
 
 "Downloading restic"
 Remove-Item -Force "$env:TEMP\restic_$($env:RESTIC_VERSION)_windows_amd64.zip" -ErrorAction SilentlyContinue
