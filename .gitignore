@@ -1,3 +1,4 @@
+*.log
 .env
 .env.ps1
 TODO
@@ -7,3 +8,5 @@ restic-backup.service
 .restic.code-workspace
 includes.txt
 excludes.txt
+EventLogs
+RegBack
