@@ -155,7 +155,7 @@ Start-BackroundJob -LockFile "restic" -ScriptBlock {
         Write-Output "**********"
         Write-Output "Backup job: Begin"
         Write-Output "**********"
-        . $env:RESTIC_EXEC backup -v --use-fs-snapshot --host $env:RESTIC_HOSTNAME.toLower --exclude-file $env:RESTIC_EXCLUDE_FILE --files-from $env:RESTIC_INCLUDE_FILE --cleanup-cache
+        . $env:RESTIC_EXEC backup -v --use-fs-snapshot --host $env:RESTIC_HOSTNAME --exclude-file $env:RESTIC_EXCLUDE_FILE --files-from $env:RESTIC_INCLUDE_FILE --cleanup-cache
         Write-Output "**********"
         Write-Output "Backup job: End"
         Write-Output "**********"

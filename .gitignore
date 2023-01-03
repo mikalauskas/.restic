@@ -3,7 +3,11 @@
 .env.ps1
 TODO
 restic
+restic.lockfile
+secret
 restic.exe
+Restic-Browser
+Restic-Browser.exe
 restic-backup.service
 .restic.code-workspace
 includes.txt
