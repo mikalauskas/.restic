@@ -116,7 +116,7 @@ Start-BackroundJob -LockFile "restic" -ScriptBlock {
             }
         }
         $jobs = @()
-        ("HKEY_CURRENT_USER","HKEY_LOCAL_MACHINE","HKEY_USERS","HKEY_CURRENT_CONFIG") | % { $jobs += Start-Job -ArgumentList $_ -ScriptBlock $Code }
+        ("HKEY_CURRENT_USER","HKEY_LOCAL_MACHINE","HKEY_USERS","HKEY_CURRENT_CONFIG") | ForEach-Object { $jobs += Start-Job -ArgumentList $_ -ScriptBlock $Code }
 
         Wait-Job -Job $jobs | Out-Null
         # Receive-Job -Job $jobs
@@ -140,8 +140,8 @@ Start-BackroundJob -LockFile "restic" -ScriptBlock {
         Write-Output "**********"
 
         if (-not (Test-Path -Path "$($env:RESTIC_ROOT)\EventLogs")) { New-Item -Force -ItemType Directory -Path "$($env:RESTIC_ROOT)\EventLogs" }
-        Get-EventLog -LogName "Application" -EntryType "Error","Warning" -After (Get-Date).AddDays(-2) | Sort-Object TimeGenerated | Select EntryType, TimeGenerated, Source, EventID, Message | Export-CSV "$($env:RESTIC_ROOT)\EventLogs\Application${ExportFileSuffix}" -NoTypeInfo
-        Get-EventLog -LogName "System" -EntryType "Error","Warning" -After (Get-Date).AddDays(-2) | Sort-Object TimeGenerated | Select EntryType, TimeGenerated, Source, EventID, Message | Export-CSV "$($env:RESTIC_ROOT)\EventLogs\System${ExportFileSuffix}" -NoTypeInfo
+        Get-EventLog -LogName "Application" -EntryType "Error","Warning" -After (Get-Date).AddDays(-2) | Sort-Object TimeGenerated | Select-Object EntryType, TimeGenerated, Source, EventID, Message | Export-CSV "$($env:RESTIC_ROOT)\EventLogs\Application${ExportFileSuffix}" -NoTypeInfo
+        Get-EventLog -LogName "System" -EntryType "Error","Warning" -After (Get-Date).AddDays(-2) | Sort-Object TimeGenerated | Select-Object EntryType, TimeGenerated, Source, EventID, Message | Export-CSV "$($env:RESTIC_ROOT)\EventLogs\System${ExportFileSuffix}" -NoTypeInfo
         
         Compress-Archive -Path "$($env:RESTIC_ROOT)\EventLogs\*" -DestinationPath "$($env:RESTIC_ROOT)\EventLogs\EventLogs.zip"
         Remove-Item -Force -Recurse -Exclude "EventLogs.zip" -Path "$($env:RESTIC_ROOT)\EventLogs\*"
