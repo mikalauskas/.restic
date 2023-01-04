@@ -155,7 +155,7 @@ Start-BackroundJob -LockFile "restic" -ScriptBlock {
         Write-Output "**********"
         Write-Output "Backup job: Begin"
         Write-Output "**********"
-        . $env:RESTIC_EXEC backup -v --use-fs-snapshot --host $env:RESTIC_HOSTNAME --exclude-file $env:RESTIC_EXCLUDE_FILE --files-from $env:RESTIC_INCLUDE_FILE --cleanup-cache
+        . $env:RESTIC_EXEC backup -v --compression max --use-fs-snapshot --host $env:RESTIC_HOSTNAME --exclude-file $env:RESTIC_EXCLUDE_FILE --files-from $env:RESTIC_INCLUDE_FILE --cleanup-cache
         Write-Output "**********"
         Write-Output "Backup job: End"
         Write-Output "**********"
@@ -165,7 +165,7 @@ Start-BackroundJob -LockFile "restic" -ScriptBlock {
         Write-Output "**********"
         Write-Output "Forget job: Begin"
         Write-Output "**********"
-        . $env:RESTIC_EXEC forget -v --prune -d $env:RESTIC_PRUNE_DAYS -w $env:RESTIC_PRUNE_WEEKS -m $env:RESTIC_PRUNE_MONTHS -y $env:RESTIC_PRUNE_YEARS --host $env:RESTIC_HOSTNAME --group-by host --cleanup-cache
+        . $env:RESTIC_EXEC forget -v --compression max --prune -d $env:RESTIC_PRUNE_DAYS -w $env:RESTIC_PRUNE_WEEKS -m $env:RESTIC_PRUNE_MONTHS -y $env:RESTIC_PRUNE_YEARS --host $env:RESTIC_HOSTNAME --group-by host --cleanup-cache
         Write-Output "**********"
         Write-Output "Forget job: End"
         Write-Output "**********"
