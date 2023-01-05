@@ -9,7 +9,7 @@ date="date +%Y-%m-%dT%H:%M:%S%Z"
 function unlockRepo () {
   echo "$($date): Unlock job: Begin"
   echo "------------------------"
-  while [ "" != "$(restic -q list locks --no-lock --no-cache)" ]; do
+  while [ "" != "$(${RESTIC_ROOT}/restic -q list locks --no-lock --no-cache)" ]; do
     echo "$($date): Unlock job: Unlocking"
     echo "------------------------"
     ${RESTIC_ROOT}/restic -q unlock --cleanup-cache
@@ -29,12 +29,12 @@ function errorCheck () {
     if [ $checkExitCode -eq 1 ]; then
       echo "$($date): Unlock job: We found some errors. Rebuilding index."
       echo "------------------------"
-      restic rebuild-index
+      ${RESTIC_ROOT}/restic rebuild-index
       rebuildExitCode=$?
       if [ $rebuildExitCode -eq 1 ]; then
         echo "$($date): Unlock job: Repo might have fatal errors. Rebuilding index and reading all packs."
         echo "------------------------"
-        restic rebuild-index --read-all-packs
+        ${RESTIC_ROOT}/restic rebuild-index --read-all-packs
         rebuildAllExitCode=$?
         if [ $rebuildAllExitCode -eq 1 ]; then
           echo "$($date): Unlock job: Fatal. Repo is dead."
