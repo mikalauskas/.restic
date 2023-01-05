@@ -3,19 +3,20 @@
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 source ${SCRIPT_DIR}/.env
 
+cd ${SCRIPT_DIR}
+git pull
+
 backupExitCode=0
 date="date +%Y-%m-%dT%H:%M:%S%Z"
 
 function unlockRepo () {
   echo "$($date): Unlock job: Begin"
-  echo "------------------------"
   while [ "" != "$(${RESTIC_ROOT}/restic -q list locks --no-lock --no-cache)" ]; do
     echo "$($date): Unlock job: Unlocking"
     ${RESTIC_ROOT}/restic -q unlock --cleanup-cache
     sleep 5
   done
   echo "$($date): Unlock job: End"
-  echo "------------------------"
 }
 
 function errorCheck () {
@@ -46,7 +47,7 @@ function doBackup () {
   ${RESTIC_ROOT}/restic cache --cleanup --max-age 0
   ${RESTIC_ROOT}/restic backup -v --compression max --host=${HOSTNAME} --exclude-file=${RESTIC_EXCLUDE_FILE} --files-from=${RESTIC_INCLUDE_FILE} --cleanup-cache
   backupExitCode=$?
-  if [ ! $backupExitCode -eq 0 ]; then
+  if [ $backupExitCode -eq 1 ]; then
     errorCheck
   fi
   echo "$($date): Backup job: End"
