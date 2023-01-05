@@ -138,6 +138,7 @@ Start-BackroundJob -LockFile "restic" -ScriptBlock {
         Write-Output "**********"
         Write-Output "Event logs backup job: Begin"
         Write-Output "**********"
+        Remove-Item -Force -Recurse -Path "$($env:RESTIC_ROOT)\EventLogs\*"
 
         if (-not (Test-Path -Path "$($env:RESTIC_ROOT)\EventLogs")) { New-Item -Force -ItemType Directory -Path "$($env:RESTIC_ROOT)\EventLogs" }
         Get-EventLog -LogName "Application" -EntryType "Error","Warning" -After (Get-Date).AddDays(-2) | Sort-Object TimeGenerated | Select-Object EntryType, TimeGenerated, Source, EventID, Message | Export-CSV "$($env:RESTIC_ROOT)\EventLogs\Application${ExportFileSuffix}" -NoTypeInfo
