@@ -13,9 +13,9 @@ date="date +%Y-%m-%dT%H:%M:%S%Z"
 function unlockRepo () {
   echo "$($date): Unlock job: Begin"
   while [ "" != "$(${RESTIC_ROOT}/restic -q list locks --no-lock --no-cache)" ]; do
+    sleep 5
     echo "$($date): Unlock job: Unlocking"
     ${RESTIC_ROOT}/restic -q unlock --cleanup-cache
-    sleep 5
   done
   echo "$($date): Unlock job: End"
 }

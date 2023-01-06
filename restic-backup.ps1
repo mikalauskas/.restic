@@ -70,10 +70,10 @@ Start-BackroundJob -LockFile "restic" -ScriptBlock {
         Write-Output "**********"
         
         do {
+            Start-Sleep 5
             Write-Output "$(Get-Date) Unlock job: Unlocking..."
             . $env:RESTIC_EXEC unlock --cleanup-cache
-            start-sleep 5
-        } while (. $env:RESTIC_EXEC list locks --no-lock)
+        } while (. $env:RESTIC_EXEC -q list locks --no-lock)
         Write-Output "**********"
         Write-Output "Unlock job: End"
         Write-Output "**********"
