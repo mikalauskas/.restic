@@ -25,20 +25,20 @@ function unlockJob () {
 
 function checkJob () {
   if [ $backupExitCode -eq 1 ]; then
-    echo "$($date): Unlock job: Begin. Checking repo."
+    echo "$($date): Check job: Begin. Checking repo."
     ${RESTIC_ROOT}/restic cache --cleanup --max-age 0
     ${RESTIC_ROOT}/restic check --read-data-subset=1%
     checkExitCode=$?
     if [ $checkExitCode -eq 1 ]; then
-      echo "$($date): Unlock job: We found some errors. Rebuilding index."
+      echo "$($date): Check job: We found some errors. Rebuilding index."
       ${RESTIC_ROOT}/restic rebuild-index
       rebuildExitCode=$?
       if [ $rebuildExitCode -eq 1 ]; then
-        echo "$($date): Unlock job: Repo might have fatal errors. Rebuilding index and reading all packs."
+        echo "$($date): Check job: Repo might have fatal errors. Rebuilding index and reading all packs."
         ${RESTIC_ROOT}/restic rebuild-index --read-all-packs
         rebuildAllExitCode=$?
         if [ $rebuildAllExitCode -eq 1 ]; then
-          echo "$($date): Unlock job: Fatal. Repo is dead."
+          echo "$($date): Check job: Fatal. Repo is dead."
           exit 0
         fi
       fi
