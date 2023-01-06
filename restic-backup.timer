@@ -4,7 +4,7 @@ Description=Restic backup daily
 [Timer]
 OnCalendar=daily
 Persistent=true
-RandomizedDelaySec=8h
+RandomizedDelaySec=3h
 
 [Install]
 WantedBy=timers.target
