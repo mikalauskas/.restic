@@ -7,6 +7,9 @@ cd ${SCRIPT_DIR}
 git config --global --add safe.directory ${SCRIPT_DIR}
 git pull
 
+# reduce memory usage
+export GOGC=20
+
 backupExitCode=0
 date="date +%Y-%m-%dT%H:%M:%S%Z"
 
