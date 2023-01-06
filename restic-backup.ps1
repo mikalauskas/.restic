@@ -173,8 +173,11 @@ Start-BackroundJob -LockFile "restic" -ScriptBlock {
     }
     if ($env:RESTIC_DO_REGISTRY_DUMP -eq 1) { Invoke-RegistryDump }
     if ($env:RESTIC_DO_EVENTLOG_DUMP -eq 1) { Invoke-EventLogDump }
+    
     Invoke-ResticUnlock
     Invoke-ResticBackup
+
+    Invoke-ResticUnlock
     Invoke-ResticForget
 }
 

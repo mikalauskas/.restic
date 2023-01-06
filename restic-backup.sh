@@ -10,7 +10,7 @@ git pull
 backupExitCode=0
 date="date +%Y-%m-%dT%H:%M:%S%Z"
 
-function unlockRepo () {
+function unlockJob () {
   echo "$($date): Unlock job: Begin"
   while [ "" != "$(${RESTIC_ROOT}/restic -q list locks --no-lock --no-cache)" ]; do
     sleep 5
@@ -20,7 +20,7 @@ function unlockRepo () {
   echo "$($date): Unlock job: End"
 }
 
-function errorCheck () {
+function checkJob () {
   if [ $backupExitCode -eq 1 ]; then
     echo "$($date): Unlock job: Begin. Checking repo."
     ${RESTIC_ROOT}/restic cache --cleanup --max-age 0
@@ -43,15 +43,19 @@ function errorCheck () {
   fi
 }
 
-function doBackup () {
+function backupJob () {
   echo "$($date): Backup job: Begin"
   ${RESTIC_ROOT}/restic cache --cleanup --max-age 0
   ${RESTIC_ROOT}/restic backup -v --compression max --host=${HOSTNAME} --exclude-file=${RESTIC_EXCLUDE_FILE} --files-from=${RESTIC_INCLUDE_FILE} --cleanup-cache
   backupExitCode=$?
   if [ $backupExitCode -eq 1 ]; then
-    errorCheck
+    checkJob
   fi
   echo "$($date): Backup job: End"
+  return 0
+}
+
+function forgetJob () {
   echo "$($date): Forget job: Begin"
   ${RESTIC_ROOT}/restic forget -v --compression max --prune -d ${PRUNE_DAYS} -w ${PRUNE_WEEKS} -m ${PRUNE_MONTHS} --host=${HOSTNAME} --group-by host --cleanup-cache
   echo "$($date): Forget job: End"
@@ -62,8 +66,11 @@ dateStart=$(date '+%s')
 echo "------------------------"
 echo "$($date): Backup started"
 
-unlockRepo
-doBackup
+unlockJob
+backupJob
+
+unlockJob
+forgetJob
 
 echo "$($date): Chown job: Begin"
 chown ${USERNAME}:${USERNAME} -R ${RESTIC_CACHE_DIR}
