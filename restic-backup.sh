@@ -4,6 +4,7 @@ SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 source ${SCRIPT_DIR}/.env
 
 cd ${SCRIPT_DIR}
+git config --global --add safe.directory ${SCRIPT_DIR}
 git pull
 
 backupExitCode=0
@@ -59,8 +60,6 @@ function doBackup () {
 
 dateStart=$(date '+%s')
 echo "------------------------"
-echo "------------------------"
-echo "------------------------"
 echo "$($date): Backup started"
 
 unlockRepo
@@ -74,7 +73,5 @@ echo "$($date): Chown job: End"
 dateEnd=$(date '+%s')
 dateResult=$(date -d@$((dateEnd-dateStart)) -u '+%H:%M:%S')
 echo "$($date): Backup ended in $dateResult"
-echo "------------------------"
-echo "------------------------"
 echo "------------------------"
 exit $?
