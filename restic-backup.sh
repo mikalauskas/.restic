@@ -49,7 +49,7 @@ function checkJob () {
 function backupJob () {
   echo "$($date): Backup job: Begin"
   ${RESTIC_ROOT}/restic cache --cleanup --max-age 0
-  ${RESTIC_ROOT}/restic backup -v --compression max --host=${HOSTNAME} --exclude-file=${RESTIC_EXCLUDE_FILE} --files-from=${RESTIC_INCLUDE_FILE} --cleanup-cache
+  ${RESTIC_ROOT}/restic backup -v --compression auto --host=${HOSTNAME} --exclude-file=${RESTIC_EXCLUDE_FILE} --files-from=${RESTIC_INCLUDE_FILE} --cleanup-cache
   backupExitCode=$?
   if [ $backupExitCode -eq 1 ]; then
     checkJob
@@ -60,7 +60,7 @@ function backupJob () {
 
 function forgetJob () {
   echo "$($date): Forget job: Begin"
-  ${RESTIC_ROOT}/restic forget -v --compression max --prune -d ${PRUNE_DAYS} -w ${PRUNE_WEEKS} -m ${PRUNE_MONTHS} --host=${HOSTNAME} --group-by host --cleanup-cache
+  ${RESTIC_ROOT}/restic forget -v --compression auto --prune -d ${PRUNE_DAYS} -w ${PRUNE_WEEKS} -m ${PRUNE_MONTHS} --host=${HOSTNAME} --group-by host --cleanup-cache
   echo "$($date): Forget job: End"
   return 0
 }
