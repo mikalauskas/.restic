@@ -28,15 +28,15 @@ function checkJob () {
   if [ $backupExitCode -eq 1 ]; then
     echo "$($date): Check job: Begin. Checking repo."
     ${RESTIC_ROOT}/restic cache --cleanup --max-age 0
-    ${RESTIC_ROOT}/restic --verbose ${VERBOSE_LEVEL} check --read-data-subset=1%
+    ${RESTIC_ROOT}/restic --verbose=${VERBOSE_LEVEL} check --read-data-subset=1%
     checkExitCode=$?
     if [ $checkExitCode -eq 1 ]; then
       echo "$($date): Check job: We found some errors. Rebuilding index."
-      ${RESTIC_ROOT}/restic --verbose ${VERBOSE_LEVEL} rebuild-index
+      ${RESTIC_ROOT}/restic --verbose=${VERBOSE_LEVEL} rebuild-index
       rebuildExitCode=$?
       if [ $rebuildExitCode -eq 1 ]; then
         echo "$($date): Check job: Repo might have fatal errors. Rebuilding index and reading all packs."
-        ${RESTIC_ROOT}/restic --verbose ${VERBOSE_LEVEL} rebuild-index --read-all-packs
+        ${RESTIC_ROOT}/restic --verbose=${VERBOSE_LEVEL} rebuild-index --read-all-packs
         rebuildAllExitCode=$?
         if [ $rebuildAllExitCode -eq 1 ]; then
           echo "$($date): Check job: Fatal. Repo is dead."
@@ -49,7 +49,7 @@ function checkJob () {
 
 function backupJob () {
   echo "$($date): Backup job: Begin"
-  ${RESTIC_ROOT}/restic backup --verbose ${VERBOSE_LEVEL} --compression ${COMPRESSION_LEVEL} --host=${HOSTNAME} --exclude-file=${RESTIC_EXCLUDE_FILE} --files-from=${RESTIC_INCLUDE_FILE}
+  ${RESTIC_ROOT}/restic backup --verbose=${VERBOSE_LEVEL} --compression ${COMPRESSION_LEVEL} --host=${HOSTNAME} --exclude-file=${RESTIC_EXCLUDE_FILE} --files-from=${RESTIC_INCLUDE_FILE}
   backupExitCode=$?
   if [ $backupExitCode -eq 1 ]; then
     checkJob
@@ -60,14 +60,14 @@ function backupJob () {
 
 function forgetJob () {
   echo "$($date): Forget job: Begin"
-  ${RESTIC_ROOT}/restic forget --verbose ${VERBOSE_LEVEL} --compression ${COMPRESSION_LEVEL} -d ${PRUNE_DAYS} -w ${PRUNE_WEEKS} -m ${PRUNE_MONTHS} --host=${HOSTNAME} --group-by host
+  ${RESTIC_ROOT}/restic forget --verbose=${VERBOSE_LEVEL} --compression ${COMPRESSION_LEVEL} -d ${PRUNE_DAYS} -w ${PRUNE_WEEKS} -m ${PRUNE_MONTHS} --host=${HOSTNAME} --group-by host
   echo "$($date): Forget job: End"
   return 0
 }
 
 function pruneJob () {
   echo "$($date): Prune job: Begin"
-  ${RESTIC_ROOT}/restic prune --verbose ${VERBOSE_LEVEL} --host=${HOSTNAME} --group-by host
+  ${RESTIC_ROOT}/restic prune --verbose=${VERBOSE_LEVEL} --host=${HOSTNAME} --group-by host
   echo "$($date): Prune job: End"
   return 0
 }
