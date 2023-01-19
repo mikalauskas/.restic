@@ -27,7 +27,7 @@ function unlockJob () {
 function checkJob () {
   if [ $backupExitCode -eq 1 ]; then
     echo "$($date): Check job: Begin. Checking repo."
-    ${RESTIC_ROOT}/restic --verbose ${VERBOSE_LEVEL} cache --cleanup --max-age 0
+    ${RESTIC_ROOT}/restic cache --cleanup --max-age 0
     ${RESTIC_ROOT}/restic --verbose ${VERBOSE_LEVEL} check --read-data-subset=1%
     checkExitCode=$?
     if [ $checkExitCode -eq 1 ]; then
@@ -76,7 +76,7 @@ dateStart=$(date '+%s')
 echo "------------------------"
 echo "$($date): Backup started"
 
-${RESTIC_ROOT}/restic cache --verbose ${VERBOSE_LEVEL} --cleanup
+${RESTIC_ROOT}/restic cache --cleanup
 
 unlockJob
 backupJob
