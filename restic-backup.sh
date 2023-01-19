@@ -66,9 +66,9 @@ function forgetJob () {
 }
 
 function pruneJob () {
-  echo "$($date): Forget job: Begin"
+  echo "$($date): Prune job: Begin"
   ${RESTIC_ROOT}/restic prune --verbose ${VERBOSE_LEVEL} --host=${HOSTNAME} --group-by host
-  echo "$($date): Forget job: End"
+  echo "$($date): Prune job: End"
   return 0
 }
 
