@@ -19,7 +19,7 @@ function unlockJob () {
   while [ "" != "$(${RESTIC_ROOT}/restic -q list locks --no-lock --no-cache)" ]; do
     sleep 5
     echo "$($date): Unlock job: Unlocking"
-    ${RESTIC_ROOT}/restic -q unlock --cleanup-cache
+    ${RESTIC_ROOT}/restic -q unlock
   done
   echo "$($date): Unlock job: End"
 }
@@ -49,8 +49,7 @@ function checkJob () {
 
 function backupJob () {
   echo "$($date): Backup job: Begin"
-  ${RESTIC_ROOT}/restic cache --verbose ${VERBOSE_LEVEL} --cleanup --max-age 0
-  ${RESTIC_ROOT}/restic backup --verbose ${VERBOSE_LEVEL} --compression ${COMPRESSION_LEVEL} --host=${HOSTNAME} --exclude-file=${RESTIC_EXCLUDE_FILE} --files-from=${RESTIC_INCLUDE_FILE} --cleanup-cache
+  ${RESTIC_ROOT}/restic backup --verbose ${VERBOSE_LEVEL} --compression ${COMPRESSION_LEVEL} --host=${HOSTNAME} --exclude-file=${RESTIC_EXCLUDE_FILE} --files-from=${RESTIC_INCLUDE_FILE}
   backupExitCode=$?
   if [ $backupExitCode -eq 1 ]; then
     checkJob
@@ -61,7 +60,14 @@ function backupJob () {
 
 function forgetJob () {
   echo "$($date): Forget job: Begin"
-  ${RESTIC_ROOT}/restic forget --verbose ${VERBOSE_LEVEL} --compression ${COMPRESSION_LEVEL} --prune -d ${PRUNE_DAYS} -w ${PRUNE_WEEKS} -m ${PRUNE_MONTHS} --host=${HOSTNAME} --group-by host --cleanup-cache
+  ${RESTIC_ROOT}/restic forget --verbose ${VERBOSE_LEVEL} --compression ${COMPRESSION_LEVEL} -d ${PRUNE_DAYS} -w ${PRUNE_WEEKS} -m ${PRUNE_MONTHS} --host=${HOSTNAME} --group-by host
+  echo "$($date): Forget job: End"
+  return 0
+}
+
+function pruneJob () {
+  echo "$($date): Forget job: Begin"
+  ${RESTIC_ROOT}/restic prune --verbose ${VERBOSE_LEVEL} --host=${HOSTNAME} --group-by host
   echo "$($date): Forget job: End"
   return 0
 }
@@ -70,11 +76,18 @@ dateStart=$(date '+%s')
 echo "------------------------"
 echo "$($date): Backup started"
 
+${RESTIC_ROOT}/restic cache --verbose ${VERBOSE_LEVEL} --cleanup
+
 unlockJob
 backupJob
 
 unlockJob
 forgetJob
+
+if [ "${DO_PRUNE}" -eq 1 ]; then
+  unlockJob
+  pruneJob
+fi
 
 echo "$($date): Chown job: Begin"
 chown ${USERNAME}:${USERNAME} -R ${RESTIC_CACHE_DIR}
