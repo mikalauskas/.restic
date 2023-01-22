@@ -7,6 +7,10 @@ cd ${SCRIPT_DIR}
 git config --global --add safe.directory ${SCRIPT_DIR}
 git pull
 
+${RESTIC_ROOT}/restic self-update
+
+chown ${USERNAME}:${USERNAME} -R ${SCRIPT_DIR}
+
 # reduce memory usage
 export GOGC=10
 export GOMAXPROCS=2
