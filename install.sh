@@ -43,14 +43,17 @@ IOSchedulingClass=2
 IOSchedulingPriority=7
 EOF
 
-sudo systemctl disable --now restic-backup*.timer
+sudo systemctl disable --now restic-backup.timer
 
-sudo rm /etc/systemd/system/restic-backup*
+sudo rm /etc/systemd/system/restic-backup.service
+sudo rm /etc/systemd/system/restic-backup.timer
+
+sudo systemctl daemon-reload
 
 sudo ln -s $HOME/.restic/restic-backup.service /etc/systemd/system/restic-backup.service
 sudo ln -s $HOME/.restic/restic-backup.timer /etc/systemd/system/restic-backup.timer
 
-sudo chown ${USERNAME}:${USERNAME} ./*
+sudo chown ${USERNAME}:${USERNAME} -R ${SCRIPT_DIR}
 
 sudo systemctl daemon-reload
 

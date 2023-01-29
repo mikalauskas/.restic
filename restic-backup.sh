@@ -7,8 +7,6 @@ cd ${SCRIPT_DIR}
 git config --global --add safe.directory ${SCRIPT_DIR}
 git pull
 
-${RESTIC_ROOT}/restic self-update
-
 chown ${USERNAME}:${USERNAME} -R ${SCRIPT_DIR}
 
 # reduce memory usage
@@ -71,7 +69,7 @@ function forgetJob () {
 
 function pruneJob () {
   echo "$($date): Prune job: Begin"
-  ${RESTIC_ROOT}/restic prune --verbose=${VERBOSE_LEVEL} --host=${HOSTNAME} --group-by host
+  ${RESTIC_ROOT}/restic prune --verbose=${VERBOSE_LEVEL} --group-by host
   echo "$($date): Prune job: End"
   return 0
 }
