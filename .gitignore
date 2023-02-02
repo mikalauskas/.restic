@@ -6,6 +6,7 @@ restic
 restic.lockfile
 secret
 restic.exe
+restic.exe.bak
 Restic-Browser
 Restic-Browser.exe
 restic-backup.service

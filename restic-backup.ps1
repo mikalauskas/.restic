@@ -2,6 +2,21 @@
 $process = Get-Process -Id $pid
 $process.PriorityClass = "BelowNormal"
 
+Start-Transcript -Path restic.log -Append -Force -IncludeInvocationHeader
+
+# read .env file
+. (Join-Path $PSScriptRoot .env.ps1)
+
+New-LockFile -LockFile "restic" | Out-Null
+
+# self-update
+
+Set-Location $PSScriptRoot
+git config --global --add safe.directory $PSScriptRoot
+git pull
+
+. $env:RESTIC_EXEC self-update
+
 function New-LockFile () {
     [CmdletBinding()]
     param (
@@ -52,13 +67,6 @@ function Start-BackroundJob () {
         }
     }
 }
-
-Start-Transcript -Path restic.log -Append -Force -IncludeInvocationHeader
-
-New-LockFile -LockFile "restic" | Out-Null
-
-# read .env file
-. (Join-Path $PSScriptRoot .env.ps1)
 
 Start-BackroundJob -LockFile "restic" -ScriptBlock {
     # read .env file
